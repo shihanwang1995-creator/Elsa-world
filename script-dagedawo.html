@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大哥刀我 · Stab Me, Boss · Elsa's world</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@300;400;500;600;700&display=swap');
+  :root { --black:#0a0a0a; --white:#f5f0e8; --gold:#c9a84c; --gold-light:#e8d08a; --gray:#1e1e1e; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--black); color:var(--white); font-family:'Noto Sans SC','Inter',sans-serif; }
+  body.lang-en [data-zh] { display:none !important; }
+  body.lang-zh [data-en] { display:none !important; }
+  .lang-toggle { display:flex; align-items:center; background:rgba(255,255,255,0.06); border:1px solid rgba(201,168,76,0.25); border-radius:2px; overflow:hidden; cursor:pointer; user-select:none; }
+  .lang-btn { padding:6px 14px; font-size:0.75rem; font-weight:600; letter-spacing:0.08em; color:rgba(245,240,232,0.45); transition:all 0.25s; }
+  .lang-btn.active { background:var(--gold); color:var(--black); }
+  .lang-divider { width:1px; height:20px; background:rgba(201,168,76,0.25); }
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:16px 60px; background:rgba(10,10,10,0.9); backdrop-filter:blur(14px); border-bottom:1px solid rgba(201,168,76,0.15); }
+  .nav-left { display:flex; align-items:center; gap:20px; }
+  .nav-back { display:flex; align-items:center; gap:8px; color:rgba(245,240,232,0.5); text-decoration:none; font-size:0.8rem; letter-spacing:0.08em; transition:color 0.3s; }
+  .nav-back:hover { color:var(--gold); }
+  .nav-divider { width:1px; height:18px; background:rgba(255,255,255,0.1); }
+  .nav-title { font-family:'Noto Serif SC',serif; font-size:1rem; font-weight:900; letter-spacing:0.08em; }
+  .nav-title span { color:var(--gold); font-style:italic; }
+  #hero { min-height:46vh; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; background:var(--black); padding-top:80px; }
+  .hero-bg { position:absolute; inset:0; background:radial-gradient(ellipse 60% 60% at 50% 50%, rgba(15,8,2,0.9) 0%, transparent 70%); }
+  .hero-grid { position:absolute; inset:0; background-image:linear-gradient(rgba(201,168,76,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,0.03) 1px,transparent 1px); background-size:60px 60px; }
+  .hero-content { position:relative; z-index:2; text-align:center; padding:0 20px; }
+  .hero-badge { display:inline-block; border:1px solid rgba(201,168,76,0.5); color:var(--gold); font-size:0.68rem; letter-spacing:0.35em; padding:6px 22px; margin-bottom:28px; }
+  .hero-title { font-weight:900; line-height:1.05; margin-bottom:8px; }
+  .hero-title.zh { font-family:'Noto Serif SC',serif; font-size:clamp(2rem,5vw,3.5rem); }
+  .hero-title.en { font-family:'Playfair Display',serif; font-size:clamp(1.2rem,2.5vw,1.8rem); font-style:italic; color:rgba(245,240,232,0.6); }
+  .hero-tags { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:20px; }
+  .hero-tag { border:1px solid rgba(201,168,76,0.3); color:var(--gold); font-size:0.72rem; padding:5px 14px; letter-spacing:0.1em; }
+  .page-section { padding:70px 60px; }
+  .page-section.dark { background:#0d0d0d; }
+  .section-label { font-size:0.68rem; letter-spacing:0.42em; color:var(--gold); text-transform:uppercase; margin-bottom:14px; display:flex; align-items:center; gap:14px; }
+  .section-label::before { content:''; display:block; width:38px; height:1px; background:var(--gold); flex-shrink:0; }
+  .section-title { font-size:clamp(1.4rem,2.5vw,2rem); font-weight:900; line-height:1.2; margin-bottom:16px; }
+  .section-title.zh { font-family:'Noto Serif SC',serif; }
+  .section-title.en { font-family:'Playfair Display',serif; }
+  .faction-block { display:flex; flex-direction:column; gap:2px; margin-bottom:32px; }
+  .faction-label { font-size:0.7rem; letter-spacing:0.18em; font-weight:700; padding:6px 14px; text-transform:uppercase; margin-bottom:0; }
+  .faction-label.good { background:rgba(76,175,125,0.12); color:#4caf7d; border-left:3px solid #4caf7d; }
+  .faction-label.neutral { background:rgba(74,140,186,0.12); color:#4a8cba; border-left:3px solid #4a8cba; }
+  .faction-label.evil { background:rgba(201,76,76,0.12); color:#c94c4c; border-left:3px solid #c94c4c; }
+  .faction-label.demon { background:rgba(160,30,30,0.18); color:#e05050; border-left:3px solid #e05050; }
+  .faction-label.legend { background:rgba(160,120,200,0.15); color:#b07ddc; border-left:3px solid #b07ddc; }
+  .role-card { border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.02); cursor:pointer; overflow:hidden; transition:background 0.25s; width:100%; }
+  .role-card:hover { background:rgba(201,168,76,0.04); }
+  .role-card-header { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; }
+  .role-name { font-family:'Noto Serif SC',serif; font-size:0.88rem; font-weight:700; }
+  .role-toggle { font-size:1rem; color:var(--gold); flex-shrink:0; }
+  .role-card-body { max-height:0; overflow:hidden; transition:max-height 0.6s ease; }
+  .role-card.open .role-card-body { max-height:3000px; }
+  .role-card-body p { padding:0 14px 14px; font-size:0.8rem; color:rgba(245,240,232,0.5); line-height:1.85; }
+  .special-rule { border:1px solid rgba(201,168,76,0.15); padding:20px 24px; background:rgba(201,168,76,0.03); margin-bottom:28px; font-size:0.82rem; color:rgba(245,240,232,0.5); line-height:1.9; }
+  .special-rule strong { color:var(--gold); font-size:0.72rem; letter-spacing:0.1em; display:block; margin-bottom:8px; }
+  .cta-bar { background:linear-gradient(135deg,#0c0800,#160f00); border-top:1px solid rgba(201,168,76,0.12); padding:60px; text-align:center; }
+  .btn-primary { background:var(--gold); color:var(--black); padding:14px 44px; font-size:0.92rem; font-weight:700; letter-spacing:0.12em; text-decoration:none; display:inline-block; transition:all 0.3s; clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%); margin:0 8px; }
+  .btn-primary:hover { background:var(--gold-light); transform:translateY(-2px); }
+  .btn-outline { background:transparent; color:var(--white); padding:14px 44px; font-size:0.92rem; letter-spacing:0.12em; text-decoration:none; display:inline-block; transition:all 0.3s; border:1px solid rgba(245,240,232,0.25); clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%); margin:0 8px; }
+  .btn-outline:hover { border-color:var(--gold); color:var(--gold); }
+  .page-footer { background:#050505; padding:24px 60px; border-top:1px solid rgba(201,168,76,0.08); display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; color:rgba(245,240,232,0.22); }
+  .footer-logo { font-family:'Noto Serif SC',serif; font-weight:900; }
+  .footer-logo span { color:var(--gold); font-style:italic; }
+  @media(max-width:860px) { nav { padding:14px 22px; } .page-section { padding:60px 22px; } .cta-bar { padding:50px 22px; } .page-footer { flex-direction:column; gap:10px; text-align:center; } }
+</style>
+</head>
+<body class="lang-zh">
+<nav>
+  <div class="nav-left">
+    <a href="clocktower.html" class="nav-back"><span>←</span><span data-zh>返回血染钟楼</span><span data-en>Back</span></a>
+    <div class="nav-divider"></div>
+    <div class="nav-title"><span>Elsa's</span> world</div>
+  </div>
+  <div class="lang-toggle" id="langToggle">
+    <div class="lang-btn active" id="btnZh">中文</div>
+    <div class="lang-divider"></div>
+    <div class="lang-btn" id="btnEn">EN</div>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge" data-zh>血染钟楼 · 小型剧本</div>
+    <div class="hero-badge" data-en>Blood on the Clocktower · Script</div>
+    <h1 class="hero-title zh" data-zh>大哥刀我</h1>
+    <h1 class="hero-title en" data-en>Stab Me, Boss</h1>
+    <div class="hero-tags">
+      <span class="hero-tag" data-zh>👥 5-6人</span>
+      <span class="hero-tag" data-en>👥 5–6 Players</span>
+      <span class="hero-tag" style="color:#c9a84c;border-color:#c9a84c40;">⭐⭐ <span data-zh>进阶</span><span data-en>Intermediate</span></span>
+    </div>
+  </div>
+</section>
+
+<section class="page-section dark">
+  <div class="section-label" data-zh>ROLES · 角色介绍</div>
+  <div class="section-label" data-en>ROLES</div>
+  <h2 class="section-title zh" data-zh>角色列表</h2>
+  <h2 class="section-title en" data-en>Role List</h2>
+
+  <div class="special-rule">
+    <strong data-zh>☠️ 死灵的复活祭典</strong>
+    <strong data-en>☠️ Special Rule: Revival Ceremony</strong>
+    <span data-zh>
+      恶魔会如同鸡木布拉夫模式一般获取初始信息。<br>
+      所有玩家在首次死亡时不会死亡，然后该角色转变为相同阵营类型的一个未出现过的角色（不会转变为恶魔的伪装角色）。<br>
+      如果恶魔在夜晚首次死亡，则在当晚不会再被唤醒。<br>
+      如果白天没人被处决，邪恶阵营获胜（即使恶魔不在场）。
+    </span>
+    <span data-en>
+      The Demon receives starting information as in Ravenswood Bluff mode.<br>
+      All players do not die on their first death. Instead, their role changes to a different unused role of the same alignment type (not a Demon bluff role).<br>
+      If the Demon dies for the first time at night, they are not woken again that night.<br>
+      If no one is executed during the day, Evil wins (even if the Demon is not in play).
+    </span>
+  </div>
+
+  <div class="faction-block">
+    <div class="faction-label good"><span data-zh>☀️ 善良阵营 · 镇民</span><span data-en>☀️ Good · Townsfolk</span></div>
+    <div class="role-card" onclick="toggleRole(this)"><div class="role-card-header"><span class="role-name" data-zh>事务官</span><span class="role-name" data-en>Clockmaker</span><span class="role-toggle">＋</span></div><div class="role-card-body"><p><span data-zh>在你的首个夜晚，你会得知一名善良玩家。</span><span data-en>On your first night, you learn 1 good player.</span></p></div></div>
+    <div class="role-card" onclick="toggleRole(this)"><div class="role-card-header"><span class="role-name" data-zh>博学者</span><span class="role-name" data-en>Scholar</span><span class="role-toggle">＋</span></div><div class="role-card-body"><p><span data-zh>每个白天，你可以私下拜访说书人获得两条信息：一个是正确的，一个是错误的。</span><span data-en>Each day, you may privately visit the Storyteller to learn 2 pieces of information: one true, one false.</span></p></div></div>
+    <div class="role-card" onclick="toggleRole(this)"><div class="role-card-header"><span class="role-name" data-zh>图书管理员</span><span class="role-name" data-en>Librarian</span><span class="role-toggle">＋</span></div><div class="role-card-body"><p><span data-zh>在你的首个夜晚，你会得知两名玩家和一个外来者角色：这两名玩家之一是该角色（或者你会得知没有外来者在场）。</span><span data-en>You start knowing that 1 of 2 players is a particular Outsider. (Or that zero are in play.)</span></p></div></div>
+    <div class="role-card" onclick="toggleRole(this)"><div class="role-card-header"><span class="role-name" data-zh>调查员</span><span class="role-name" data-en>Investigator</span><span class="role-toggle">＋</span></div><div class="role-card-body"><p><span data-zh>在你的首个夜晚，你会得知两名玩家和一个爪牙角色：这两名玩家之一是该角色（或者你会得知没有爪牙在场）。</span><span data-en>You start knowing that 1 of 2 players is a particular Minion.</span></p></div></div>
+    <div class="role-card" onclick="toggleRole(this)"><div class="role-card-header"><span class="role-name" data-zh>共情者</span><span class="role-name" data-en>Empath</span><span class="role-toggle">＋</span></div><div class="role-card-body"><p><span data-zh>每个夜晚，你会得知与你邻近的两名存活的玩家中邪恶玩家的数量。</span><span data-en>Each night, you learn how many of your 2 alive neighbors are evil.</span></p></div></div>
+    <div class="role-card" onclick="toggleRole(this)"><div class="role-card-header"><span class="role-name" data-zh>侍女</span><span class="role-name" data-en>Maid</span><span class="role-toggle">＋</span></div><div class="role-card-body"><p><span data-zh>每个夜晚，你要选择除你以外的两名存活的玩家：你会得知他们中有几人在当晚因其自身能力而被唤醒。</span><span data-en>Each night, choose 2 alive players (not yourself): you learn how many of them were woken tonight by their own ability.</span></p></div></div>
+    <div class="role-card" onclick="toggleRole(this)"><div class="role-card-header"><span class="role-name" data-zh>卖花女孩</span><span class="role-name" data-en>Flowergirl</span><span class="role-toggle">＋</span></div><div class="role-card-body"><p><span data-zh>每个夜晚*，你会得知在今天白天时是否有恶魔投票。</span><span data-en>Each night*, you learn if the Demon voted today.</span></p></div></div>
+    <div class="role-card" onclick="toggleRole(this)"><div class="role-card-header"><span class="role-name" data-zh>城镇公告员</span><span class="role-name" data-en>Town Crier</span><span class="role-toggle">＋</span></div><div class="role-card-body"><p><span data-zh>每个夜晚*，你会得知在今天白天时是否有爪牙发起过提名。</span><span data-en>Each night*, you learn if a Minion nominated today.</span></p></div></div>
+    <div class="role-card" onclick="toggleRole(this)"><div class="role-card-header"><span class="role-name" data-zh>女裁缝</span><span class="role-name" data-en>Seamstress</span><span class="role-toggle">＋</span></div><div class="role-card-body"><p><span data-zh>每局游戏限一次，在夜晚时，你可以选择（除你以外）的两名玩家：你会得知他们是否为同一阵营。</span><span data-en>Once per game, at night, choose 2 players (not yourself): you learn if they are the same alignment.</span></p></div></div>
+    <div class="role-card" onclick="toggleRole(this)"><div class="role-card-header"><span class="role-name" data-zh>猎手</span><span class="role-name" data-en>Huntsman</span><span class="role-toggle">＋</span></div><div class="role-card-body"><p><span data-zh>每局游戏限一次，你可以在白天时公开选择一名玩家，如果他是恶魔，他死亡。</span><span data-en>Once per game, during the day, publicly choose a player: if they are the Demon, they die.</span></p></div></div>
+    <div class="role-card" onclick="toggleRole(this)"><div class="role-card-header"><span class="role-name" data-zh>杂耍艺人</span><span class="role-name" data-en>Juggler</span><span class="role-toggle">＋</span></div><div class="role-card-body"><p><span data-zh>在你的首个白天，你可以公开猜测任意玩家的角色最多五次。在当晚，你会得知猜测正确的角色数量。</span><span data-en>On your 1st day, publicly guess up to 5 players' characters. That night, you learn how many you got correct.</span></p></div></div>
+    <div class="role-card" onclick="toggleRole(this)"><div class="role-card-header"><span class="role-name" data-zh>艺术家</span><span class="role-name" data-en>Artist</span><span class="role-toggle">＋</span></div><div class="role-card-body"><p><span data-zh>每局游戏限一次，在白天时，你可以私下拜访说书人提问一个是非题，你会得知该问题的答案（是/否/我不知道）。</span><span data-en>Once per game, during the day, privately ask the Storyteller any yes/no question: you learn the answer (Yes/No/I don't know).</span></p></div></div>
+    <div class="role-card" onclick="toggleRole(this)"><div class="role-card-header"><span class="role-name" data-zh>渔夫</span><span class="role-name" data-en>Fisherman</span><span class="role-toggle">＋</span></div><div class="role-card-body"><p><span data-zh>每局游戏限一次，在白天时，你可以让说书人给你一些能帮助你的阵营获胜的建议。</span><span data-en>Once per game, during the day, visit the Storyteller for advice on how to win.</span></p></div></div>
+  </div>
+
+  <div class="faction-block">
+    <div class="faction-label neutral"><span data-zh>🌙 善良阵营 · 外来者</span><span data-en>🌙 Good · Outsiders</span></div>
+    <div class="role-card" onclick="toggleRole(this)"><div class="role-card-header"><span class="role-name" data-zh>酒鬼</span><span class="role-name" data-en>Drunk</span><span class="role-toggle">＋</span></div><div class="role-card-body"><p><span data-zh>你不知道你是酒鬼。你以为你是一个镇民角色，但其实你不是。</span><span data-en>You do not know you are the Drunk. You think you are a Townsfolk, but you are not.</span></p></div></div>
+  </div>
+
+  <div class="faction-block">
+    <div class="faction-label evil"><span data-zh>🔪 邪恶阵营 · 爪牙</span><span data-en>🔪 Evil · Minions</span></div>
+    <div class="role-card" onclick="toggleRole(this)"><div class="role-card-header"><span class="role-name" data-zh>提线木偶</span><span class="role-name" data-en>Marionette</span><span class="role-toggle">＋</span></div><div class="role-card-body"><p><span data-zh>你以为你是一个善良角色，但其实你不是。恶魔会知道你是提线木偶。【提线木偶会与恶魔邻座】</span><span data-en>You think you are a good character, but you are not. The Demon knows you are the Marionette. [The Marionette neighbors the Demon]</span></p></div></div>
+  </div>
+
+  <div class="faction-block">
+    <div class="faction-label demon"><span data-zh>😈 邪恶阵营 · 恶魔</span><span data-en>😈 Evil · Demons</span></div>
+    <div class="role-card" onclick="toggleRole(this)"><div class="role-card-header"><span class="role-name" data-zh>亡骨魔</span><span class="role-name" data-en>Lleech</span><span class="role-toggle">＋</span></div><div class="role-card-body"><p><span data-zh>每个夜晚*，你要选择一名玩家：他死亡。被你杀死的爪牙保留他的能力，且与他邻近的两名镇民之一中毒。【-1 外来者】</span><span data-en>Each night*, choose a player: they die. Your dead Minion retains their ability and poisons 1 of the 2 Townsfolk neighboring them. [-1 Outsider]</span></p></div></div>
+    <div class="role-card" onclick="toggleRole(this)"><div class="role-card-header"><span class="role-name" data-zh>涡流</span><span class="role-name" data-en>Vortox</span><span class="role-toggle">＋</span></div><div class="role-card-body"><p><span data-zh>每个夜晚*，你要选择一名玩家：他死亡。镇民玩家的能力都会产生错误信息。如果白天没人被处决，邪恶阵营获胜。</span><span data-en>Each night*, choose a player: they die. Townsfolk abilities yield false information. If a day ends with no execution, Evil wins.</span></p></div></div>
+  </div>
+
+  <div class="faction-block">
+    <div class="faction-label legend"><span data-zh>✨ 传奇角色 · 说书人</span><span data-en>✨ Legend · Storyteller</span></div>
+    <div class="role-card" onclick="toggleRole(this)"><div class="role-card-header"><span class="role-name" data-zh>哨兵</span><span class="role-name" data-en>Sentinel</span><span class="role-toggle">＋</span></div><div class="role-card-body"><p><span data-zh>在初始设置时，可能会额外增加或减少一个外来者。</span><span data-en>When setting up the game, 1 extra Outsider may be added or removed.</span></p></div></div>
+  </div>
+</section>
+
+<div class="cta-bar">
+  <h2 class="zh" data-zh>准备好了吗？</h2>
+  <h2 class="en" data-en>Ready to Play?</h2>
+  <p data-zh>预约说书人，开始你的血染钟楼之旅。</p>
+  <p data-en>Book your Storyteller and begin your Blood on the Clocktower experience.</p>
+  <a href="clocktower.html" class="btn-outline" data-zh>返回剧本列表</a>
+  <a href="clocktower.html" class="btn-outline" data-en>Back to Scripts</a>
+</div>
+
+<footer class="page-footer">
+  <div class="footer-logo"><span>Elsa's</span> world 桌游工作室</div>
+  <div>© 2025 Elsa's world · Pittsburgh, PA</div>
+</footer>
+
+<script>
+  function toggleRole(card) {
+    const isOpen = card.classList.contains('open');
+    document.querySelectorAll('.role-card.open').forEach(c => { c.classList.remove('open'); c.querySelector('.role-toggle').textContent = '＋'; });
+    if (!isOpen) { card.classList.add('open'); card.querySelector('.role-toggle').textContent = '－'; }
+  }
+  const btnZh = document.getElementById('btnZh');
+  const btnEn = document.getElementById('btnEn');
+  btnZh.addEventListener('click', () => { document.body.className = 'lang-zh'; btnZh.classList.add('active'); btnEn.classList.remove('active'); });
+  btnEn.addEventListener('click', () => { document.body.className = 'lang-en'; btnEn.classList.add('active'); btnZh.classList.remove('active'); });
+</script>
+</body>
+</html>
